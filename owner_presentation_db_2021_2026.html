@@ -1,0 +1,2897 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FishTime: сторінка для власника</title>
+    <style>
+      :root {
+        --bg-1: #f4f7fb;
+        --bg-2: #e9eff8;
+        --card: #ffffff;
+        --ink: #10253d;
+        --muted: #4f6177;
+        --accent: #0f8d8f;
+        --accent-2: #f4a300;
+        --line: #d8e2f0;
+        --ok: #2f9e44;
+        --bad: #d9480f;
+        --radius: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(1800px 900px at 8% -8%, #ffffff 0%, transparent 56%),
+          radial-gradient(1600px 800px at 92% -6%, #dff4f5 0%, transparent 58%),
+          linear-gradient(155deg, var(--bg-1) 0%, var(--bg-2) 100%);
+        font-family: 'Manrope', 'Avenir Next', 'Segoe UI', sans-serif;
+        line-height: 1.5;
+        font-size: 17px;
+      }
+
+      .page {
+        width: min(1720px, 98vw);
+        margin: 22px auto 44px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .hero {
+        background: linear-gradient(
+          130deg,
+          #0f2e4d 0%,
+          #0c7b7f 55%,
+          #f4a300 130%
+        );
+        color: #fff;
+        border-radius: 22px;
+        padding: 28px 30px;
+        box-shadow: 0 18px 42px rgba(11, 39, 66, 0.28);
+        animation: reveal 0.7s ease-out both;
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: 44px;
+        line-height: 1.12;
+        letter-spacing: 0.2px;
+      }
+      h2 {
+        margin: 0 0 8px;
+        font-size: 30px;
+        line-height: 1.2;
+      }
+      h3 {
+        margin: 0 0 8px;
+        font-size: 22px;
+        line-height: 1.25;
+      }
+      p {
+        margin: 0;
+      }
+
+      .hero-meta {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .badge {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+      }
+
+      .warning {
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        font-size: 16px;
+      }
+
+      .grid-kpi {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .kpi {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px 18px;
+        box-shadow: 0 10px 28px rgba(16, 37, 61, 0.08);
+        animation: reveal 0.7s ease-out both;
+      }
+
+      .kpi .label {
+        color: var(--muted);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+      }
+      .kpi .value {
+        margin-top: 4px;
+        font-size: 31px;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+      .kpi .delta {
+        margin-top: 6px;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .kpi .delta.bad {
+        color: var(--bad);
+      }
+      .kpi .delta.ok {
+        color: var(--ok);
+      }
+
+      .section {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: 0 10px 28px rgba(16, 37, 61, 0.08);
+        animation: reveal 0.7s ease-out both;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: baseline;
+        margin-bottom: 12px;
+      }
+
+      .section-sub {
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .img-card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fbfdff;
+      }
+
+      .img-card img {
+        width: 100%;
+        display: block;
+      }
+
+      .chart-note {
+        padding: 10px 12px;
+        border-top: 1px solid #e5edf8;
+        font-size: 18px;
+        color: #304962;
+        background: #f9fcff;
+      }
+
+      .chart-note p + p {
+        margin-top: 6px;
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 18px;
+        background: #fff;
+      }
+
+      .table-wrap {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: auto;
+        max-height: 640px;
+        background: #fff;
+      }
+
+      .data-table th,
+      .data-table td {
+        border-bottom: 1px solid #edf1f7;
+        padding: 10px 12px;
+        text-align: left;
+        vertical-align: top;
+        white-space: nowrap;
+      }
+
+      .data-table th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f3f7fc;
+        color: #1d3652;
+        font-weight: 700;
+      }
+
+      .data-table tr:nth-child(even) td {
+        background: #fbfdff;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .footer {
+        background: #10253d;
+        color: #d8e6f8;
+        border-radius: 18px;
+        padding: 16px 18px;
+        font-size: 16px;
+      }
+
+      @keyframes reveal {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 1080px) {
+        .grid-kpi {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+        .split {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          font-size: 34px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .page {
+          width: min(100vw, 100%);
+          margin: 8px auto 18px;
+          padding: 0 8px;
+        }
+        .hero {
+          padding: 20px 16px;
+          border-radius: 16px;
+        }
+        .section {
+          padding: 14px;
+          border-radius: 14px;
+        }
+        .kpi .value {
+          font-size: 24px;
+        }
+        .data-table {
+          font-size: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="hero">
+        <h1>FishTime: пояснювальна сторінка для власника</h1>
+        <p>
+          Матеріал підготовлено на базі <b>owner_report_db_2021_2026.md</b> та
+          деталізованих таблиць з БД 1С.
+        </p>
+        <div class="hero-meta">
+          <span class="badge">Період: 2021-2026 (по 13.04.2026)</span>
+          <span class="badge"
+            >Джерело: 1Cv77.dat, продажі + собівартість + склад +
+            закупівлі</span
+          >
+          <span class="badge">Оновлено: 2026-04-14 22:17</span>
+        </div>
+        <div class="warning">
+          Важливе уточнення: запис <b>"Основной покупатель"</b> у 1С — це не
+          один клієнт, а сукупні офлайн-продажі в магазині.
+        </div>
+      </section>
+
+      <section class="grid-kpi">
+        <article class="kpi">
+          <div class="label">Виручка 2021 -> 2025</div>
+          <div class="value">1 265 723 грн -> 1 078 051 грн</div>
+          <div class="delta bad">-14.8%</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Продані одиниці 2021 -> 2025</div>
+          <div class="value">24 537 -> 11 728</div>
+          <div class="delta bad">-52.2%</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Середня ціна 2021 -> 2025</div>
+          <div class="value">51.58 грн -> 91.92 грн</div>
+          <div class="delta ok">78.2%</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Частка офлайн-каналу у 2025</div>
+          <div class="value">74.09%</div>
+          <div class="delta bad">Домінування офлайн-каналу</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Прогноз річної виручки 2026 до 2025</div>
+          <div class="value">-28.0%</div>
+          <div class="delta bad">Темп виручки рік-до-року</div>
+        </article>
+      </section>
+
+      <section class="grid-kpi">
+        <article class="kpi">
+          <div class="label">Сума закупівель 2021-2026</div>
+          <div class="value">3 211 672 грн</div>
+          <div class="delta ok">Дані з документів приходу та партій</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Сума списань 2021-2026</div>
+          <div class="value">-597 008 грн</div>
+          <div class="delta bad">Поточний зафіксований рівень втрат</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Залишок складу (остання дата)</div>
+          <div class="value">6 209 948 грн</div>
+          <div class="delta ok">299 779 од. на кінець дня</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Валова маржа 2025</div>
+          <div class="value">60.2%</div>
+          <div class="delta ok">Розрахунок: виручка нетто - собівартість</div>
+        </article>
+        <article class="kpi">
+          <div class="label">Валова маржа 2026 (YTD)</div>
+          <div class="value">64.9%</div>
+          <div class="delta ok">Поточний рівень відносно 2025</div>
+        </article>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>1) Загальна динаміка бізнесу</h2>
+          <span class="section-sub"
+            >Річна зміна виручки, кількості продажів та середньої ціни</span
+          >
+        </div>
+        <div class="two-col">
+          <div class="img-card">
+            <img
+              src="presentation_assets/db_01_revenue_qty_price.png"
+              alt="Динаміка виручки, кількості та ціни"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> як змінювались виручка, кількість
+                проданих одиниць і середня ціна по роках.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> основна проблема в
+                падінні кількості продажів; зростання ціни не перекрило втрату
+                обсягу.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Рік</th>
+                  <th>Кількість чеків/документів</th>
+                  <th>Кількість клієнтів</th>
+                  <th>Кількість товарних позицій</th>
+                  <th>Продано одиниць</th>
+                  <th>Виручка (нетто)</th>
+                  <th>Середній чек</th>
+                  <th>Середня ціна за одиницю</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2 021</td>
+                  <td>3 926</td>
+                  <td>965</td>
+                  <td>5 516</td>
+                  <td>24 537</td>
+                  <td>1 265 723 грн</td>
+                  <td>322.40 грн</td>
+                  <td>51.58 грн</td>
+                </tr>
+                <tr>
+                  <td>2 022</td>
+                  <td>3 168</td>
+                  <td>557</td>
+                  <td>4 766</td>
+                  <td>20 390</td>
+                  <td>1 406 316 грн</td>
+                  <td>443.91 грн</td>
+                  <td>68.97 грн</td>
+                </tr>
+                <tr>
+                  <td>2 023</td>
+                  <td>3 831</td>
+                  <td>671</td>
+                  <td>5 358</td>
+                  <td>23 778</td>
+                  <td>1 841 498 грн</td>
+                  <td>480.68 грн</td>
+                  <td>77.45 грн</td>
+                </tr>
+                <tr>
+                  <td>2 024</td>
+                  <td>3 057</td>
+                  <td>388</td>
+                  <td>4 725</td>
+                  <td>16 803</td>
+                  <td>1 269 359 грн</td>
+                  <td>415.23 грн</td>
+                  <td>75.54 грн</td>
+                </tr>
+                <tr>
+                  <td>2 025</td>
+                  <td>2 397</td>
+                  <td>258</td>
+                  <td>3 706</td>
+                  <td>11 728</td>
+                  <td>1 078 051 грн</td>
+                  <td>449.75 грн</td>
+                  <td>91.92 грн</td>
+                </tr>
+                <tr>
+                  <td>2 026</td>
+                  <td>440</td>
+                  <td>46</td>
+                  <td>893</td>
+                  <td>2 063</td>
+                  <td>216 966 грн</td>
+                  <td>493.10 грн</td>
+                  <td>105.17 грн</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>2) Чому просіла виручка у 2023 -> 2025</h2>
+          <span class="section-sub"
+            >Розкладання зміни виручки на ціну, кількість і структуру
+            продажів</span
+          >
+        </div>
+        <div class="two-col">
+          <div class="img-card">
+            <img
+              src="presentation_assets/db_03_price_volume.png"
+              alt="Розкладання зміни виручки"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> з яких частин складається зміна
+                виручки: ефект ціни, ефект кількості та структурний ефект.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> найбільший негативний
+                внесок дає саме падіння кількості продажів.
+              </p>
+            </div>
+          </div>
+          <div>
+            <div class="kpi" style="margin-bottom: 12px">
+              <div class="label">Загальна зміна виручки (2025 - 2023)</div>
+              <div class="value">-763 447 грн</div>
+            </div>
+            <div class="split">
+              <div class="kpi">
+                <div class="label">Вплив зміни цін</div>
+                <div class="value">344 165 грн</div>
+              </div>
+              <div class="kpi">
+                <div class="label">Вплив зміни кількості</div>
+                <div class="value">-933 202 грн</div>
+              </div>
+            </div>
+            <div class="kpi" style="margin-top: 12px">
+              <div class="label">Вплив зміни структури товарів</div>
+              <div class="value">-174 410 грн</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>2.1) Собівартість і валова маржа</h2>
+          <span class="section-sub"
+            >Нова фінчастина з БД: по кожному рядку продажу та партії</span
+          >
+        </div>
+        <div class="two-col">
+          <div class="img-card">
+            <img
+              src="presentation_assets/owner_fin_01_margin_by_year.png"
+              alt="Собівартість і валова маржа"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> по кожному року порівняння виручки
+                нетто і собівартості, а також валової маржі.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> маржа у 2022-2026 значно
+                вища, ніж у 2021; це означає, що головний резерв росту прибутку
+                зараз у поверненні обсягу продажів, а не у підвищенні націнки.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Рік</th>
+                  <th>Виручка нетто</th>
+                  <th>Собівартість</th>
+                  <th>Валовий прибуток (розрах.)</th>
+                  <th>Валова маржа, %</th>
+                  <th>К-сть рядків продажу</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2 021</td>
+                  <td>1 253 329 грн</td>
+                  <td>876 495 грн</td>
+                  <td>376 834 грн</td>
+                  <td>30.1%</td>
+                  <td>13 241</td>
+                </tr>
+                <tr>
+                  <td>2 022</td>
+                  <td>1 399 694 грн</td>
+                  <td>550 428 грн</td>
+                  <td>849 266 грн</td>
+                  <td>60.7%</td>
+                  <td>10 986</td>
+                </tr>
+                <tr>
+                  <td>2 023</td>
+                  <td>1 837 949 грн</td>
+                  <td>739 096 грн</td>
+                  <td>1 098 852 грн</td>
+                  <td>59.8%</td>
+                  <td>13 760</td>
+                </tr>
+                <tr>
+                  <td>2 024</td>
+                  <td>1 268 747 грн</td>
+                  <td>515 285 грн</td>
+                  <td>753 461 грн</td>
+                  <td>59.4%</td>
+                  <td>10 826</td>
+                </tr>
+                <tr>
+                  <td>2 025</td>
+                  <td>1 074 243 грн</td>
+                  <td>427 860 грн</td>
+                  <td>646 383 грн</td>
+                  <td>60.2%</td>
+                  <td>7 567</td>
+                </tr>
+                <tr>
+                  <td>2 026</td>
+                  <td>211 791 грн</td>
+                  <td>74 383 грн</td>
+                  <td>137 408 грн</td>
+                  <td>64.9%</td>
+                  <td>1 235</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>2.2) Закупівлі і постачальники</h2>
+          <span class="section-sub"
+            >Ціна, дата та постачальник із нового блоку закупівель</span
+          >
+        </div>
+        <div class="two-col">
+          <div class="img-card">
+            <img
+              src="presentation_assets/owner_fin_02_purchases_by_year.png"
+              alt="Закупівлі по роках"
+            />
+            <div class="chart-note">
+              <p><b>Що показує графік:</b> річну суму закупівель у гривні.</p>
+              <p>
+                <b>Короткий висновок для власника:</b> після 2023 обсяг
+                закупівель зменшувався, що підтверджує зниження обороту і
+                потребує акуратного планування запасів.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Рік</th>
+                  <th>Сума закупівель</th>
+                  <th>Закуплено одиниць</th>
+                  <th>К-сть рядків</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2 021</td>
+                  <td>919 115 грн</td>
+                  <td>18 730.00</td>
+                  <td>2 191</td>
+                </tr>
+                <tr>
+                  <td>2 022</td>
+                  <td>556 651 грн</td>
+                  <td>14 341.00</td>
+                  <td>1 184</td>
+                </tr>
+                <tr>
+                  <td>2 023</td>
+                  <td>875 641 грн</td>
+                  <td>15 831.00</td>
+                  <td>2 030</td>
+                </tr>
+                <tr>
+                  <td>2 024</td>
+                  <td>450 834 грн</td>
+                  <td>6 989.00</td>
+                  <td>1 223</td>
+                </tr>
+                <tr>
+                  <td>2 025</td>
+                  <td>369 695 грн</td>
+                  <td>9 167.00</td>
+                  <td>1 092</td>
+                </tr>
+                <tr>
+                  <td>2 026</td>
+                  <td>39 738 грн</td>
+                  <td>1 247.00</td>
+                  <td>177</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="two-col" style="margin-top: 12px">
+          <div class="img-card">
+            <img
+              src="presentation_assets/owner_fin_05_top_suppliers.png"
+              alt="Топ постачальників"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> кого з постачальників ви фінансуєте
+                найбільше по сумі закупівель.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> є концентрація закупівель
+                на обмеженій групі постачальників; важливо тримати альтернативи
+                по ключових позиціях.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Постачальник</th>
+                  <th>Сума закупівель</th>
+                  <th>К-сть рядків</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Golden Catch</td>
+                  <td>663 868 грн</td>
+                  <td>1 303</td>
+                </tr>
+                <tr>
+                  <td>Rybray</td>
+                  <td>369 742 грн</td>
+                  <td>645</td>
+                </tr>
+                <tr>
+                  <td>Колибри</td>
+                  <td>288 395 грн</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Проф-Монтаж</td>
+                  <td>209 044 грн</td>
+                  <td>921</td>
+                </tr>
+                <tr>
+                  <td>Fishing Roi</td>
+                  <td>207 435 грн</td>
+                  <td>375</td>
+                </tr>
+                <tr>
+                  <td>Дельфас Станислав Катран лемиго</td>
+                  <td>136 238 грн</td>
+                  <td>329</td>
+                </tr>
+                <tr>
+                  <td>Элит Альянс</td>
+                  <td>134 680 грн</td>
+                  <td>433</td>
+                </tr>
+                <tr>
+                  <td>Salmo</td>
+                  <td>101 058 грн</td>
+                  <td>366</td>
+                </tr>
+                <tr>
+                  <td>Фанатик</td>
+                  <td>96 812 грн</td>
+                  <td>617</td>
+                </tr>
+                <tr>
+                  <td>Jaxon</td>
+                  <td>85 381 грн</td>
+                  <td>320</td>
+                </tr>
+                <tr>
+                  <td>Юлия (поплавки)</td>
+                  <td>82 437 грн</td>
+                  <td>152</td>
+                </tr>
+                <tr>
+                  <td>Пономаренко Ю.Л.</td>
+                  <td>70 417 грн</td>
+                  <td>29</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>2.3) Списання, залишки, операційні витрати</h2>
+          <span class="section-sub"
+            >Контроль втрат по складу та покриття даних по витратах</span
+          >
+        </div>
+        <div class="two-col">
+          <div class="img-card">
+            <img
+              src="presentation_assets/owner_fin_03_writeoffs_by_year.png"
+              alt="Списання по роках"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> річний рівень списань за собівартістю.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> списання залишаються
+                суттєвими і прямо зменшують фінрезультат; потрібен регулярний
+                контроль причин списання по SKU.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Рік</th>
+                  <th>Сума списань (зі знаком)</th>
+                  <th>Кількість списаних одиниць (зі знаком)</th>
+                  <th>К-сть рядків списання</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2 021</td>
+                  <td>-294 897 грн</td>
+                  <td>-14 394.60</td>
+                  <td>2 654</td>
+                </tr>
+                <tr>
+                  <td>2 022</td>
+                  <td>-85 903 грн</td>
+                  <td>-3 655.00</td>
+                  <td>1 199</td>
+                </tr>
+                <tr>
+                  <td>2 023</td>
+                  <td>-60 043 грн</td>
+                  <td>-3 312.00</td>
+                  <td>927</td>
+                </tr>
+                <tr>
+                  <td>2 024</td>
+                  <td>-79 957 грн</td>
+                  <td>-1 699.00</td>
+                  <td>708</td>
+                </tr>
+                <tr>
+                  <td>2 025</td>
+                  <td>-67 740 грн</td>
+                  <td>-11 642.00</td>
+                  <td>924</td>
+                </tr>
+                <tr>
+                  <td>2 026</td>
+                  <td>-8 467 грн</td>
+                  <td>-2 805.00</td>
+                  <td>118</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="two-col" style="margin-top: 12px">
+          <div class="img-card">
+            <img
+              src="presentation_assets/owner_fin_04_stock_balance_365d.png"
+              alt="Залишки складу 365 днів"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> як змінювалась грошова вартість
+                складського залишку за собівартістю в останній рік.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> графік дає розуміння, чи
+                не заморожуються кошти в запасах і чи немає різких провалів по
+                поповненню.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Дата</th>
+                  <th>Залишок, одиниць (кінець дня)</th>
+                  <th>Залишок, грн за собівартістю</th>
+                  <th>Зміна за день, одиниць</th>
+                  <th>Зміна за день, грн</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2024-11-30</td>
+                  <td>316 883.00</td>
+                  <td>6 397 530 грн</td>
+                  <td>-190.00</td>
+                  <td>-6 540 грн</td>
+                </tr>
+                <tr>
+                  <td>2024-12-30</td>
+                  <td>316 169.00</td>
+                  <td>6 371 574 грн</td>
+                  <td>-73.00</td>
+                  <td>-2 508 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-01-31</td>
+                  <td>317 350.00</td>
+                  <td>6 348 956 грн</td>
+                  <td>-106.00</td>
+                  <td>-5 574 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-02-28</td>
+                  <td>316 611.00</td>
+                  <td>6 328 217 грн</td>
+                  <td>-92.00</td>
+                  <td>-3 794 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-03-31</td>
+                  <td>317 086.00</td>
+                  <td>6 360 194 грн</td>
+                  <td>18.00</td>
+                  <td>4 681 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-04-30</td>
+                  <td>317 421.00</td>
+                  <td>6 368 895 грн</td>
+                  <td>-13.00</td>
+                  <td>-271 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-05-31</td>
+                  <td>316 460.00</td>
+                  <td>6 342 028 грн</td>
+                  <td>-13.00</td>
+                  <td>-530 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-06-30</td>
+                  <td>315 937.00</td>
+                  <td>6 363 628 грн</td>
+                  <td>168.00</td>
+                  <td>5 873 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-07-31</td>
+                  <td>315 513.00</td>
+                  <td>6 350 366 грн</td>
+                  <td>-62.00</td>
+                  <td>-5 190 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-08-30</td>
+                  <td>313 961.00</td>
+                  <td>6 298 313 грн</td>
+                  <td>-85.00</td>
+                  <td>-4 087 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-09-30</td>
+                  <td>314 402.80</td>
+                  <td>6 338 407 грн</td>
+                  <td>-91.20</td>
+                  <td>-3 869 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-10-31</td>
+                  <td>310 358.80</td>
+                  <td>6 307 706 грн</td>
+                  <td>-40.00</td>
+                  <td>-1 946 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-11-29</td>
+                  <td>305 324.80</td>
+                  <td>6 271 804 грн</td>
+                  <td>-15.00</td>
+                  <td>-206 грн</td>
+                </tr>
+                <tr>
+                  <td>2025-12-31</td>
+                  <td>303 049.80</td>
+                  <td>6 253 061 грн</td>
+                  <td>-5.00</td>
+                  <td>-874 грн</td>
+                </tr>
+                <tr>
+                  <td>2026-01-31</td>
+                  <td>302 823.80</td>
+                  <td>6 240 875 грн</td>
+                  <td>-22.00</td>
+                  <td>-390 грн</td>
+                </tr>
+                <tr>
+                  <td>2026-02-28</td>
+                  <td>302 204.80</td>
+                  <td>6 224 256 грн</td>
+                  <td>-15.00</td>
+                  <td>-294 грн</td>
+                </tr>
+                <tr>
+                  <td>2026-03-31</td>
+                  <td>299 832.80</td>
+                  <td>6 218 381 грн</td>
+                  <td>-18.00</td>
+                  <td>-614 грн</td>
+                </tr>
+                <tr>
+                  <td>2026-04-13</td>
+                  <td>299 778.80</td>
+                  <td>6 209 948 грн</td>
+                  <td>-12.00</td>
+                  <td>-851 грн</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>3) Структура клієнтів і каналів продажу</h2>
+          <span class="section-sub"
+            >Наскільки продажі зосереджені у найбільших каналах/клієнтах</span
+          >
+        </div>
+        <div class="two-col">
+          <div class="img-card">
+            <img
+              src="presentation_assets/db_02_buyer_concentration.png"
+              alt="Концентрація продажів"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> частку найбільших каналів/клієнтів у
+                загальній виручці.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> частка позиції "Основной
+                покупатель" фактично відображає офлайн-магазин, а не одного
+                покупця; це означає сильну залежність від офлайн-каналу.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Рік</th>
+                  <th>Частка найбільшого каналу/клієнта</th>
+                  <th>Частка топ-5 каналів/клієнтів</th>
+                  <th>Частка топ-10 каналів/клієнтів</th>
+                  <th>Частка топ-10 товарів у виручці</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2021</td>
+                  <td>30.96%</td>
+                  <td>41.00%</td>
+                  <td>46.37%</td>
+                  <td>7.10%</td>
+                </tr>
+                <tr>
+                  <td>2022</td>
+                  <td>52.76%</td>
+                  <td>59.60%</td>
+                  <td>64.11%</td>
+                  <td>8.69%</td>
+                </tr>
+                <tr>
+                  <td>2023</td>
+                  <td>45.05%</td>
+                  <td>57.95%</td>
+                  <td>64.15%</td>
+                  <td>5.30%</td>
+                </tr>
+                <tr>
+                  <td>2024</td>
+                  <td>52.49%</td>
+                  <td>65.70%</td>
+                  <td>70.18%</td>
+                  <td>6.09%</td>
+                </tr>
+                <tr>
+                  <td>2025</td>
+                  <td>74.09%</td>
+                  <td>76.37%</td>
+                  <td>78.59%</td>
+                  <td>6.60%</td>
+                </tr>
+                <tr>
+                  <td>2026</td>
+                  <td>64.35%</td>
+                  <td>83.50%</td>
+                  <td>89.96%</td>
+                  <td>18.07%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="split" style="margin-top: 12px">
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Клієнт / канал продажу</th>
+                  <th>Виручка</th>
+                  <th>Продано одиниць</th>
+                  <th>Кількість чеків/документів</th>
+                  <th>Кількість товарних позицій</th>
+                  <th>Середній чек</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Офлайн-продажі в магазині (сукупно, не один клієнт)</td>
+                  <td>3 567 998 грн</td>
+                  <td>57 972</td>
+                  <td>11 011</td>
+                  <td>8 267</td>
+                  <td>324.04 грн</td>
+                </tr>
+                <tr>
+                  <td>Клименко А В</td>
+                  <td>230 838 грн</td>
+                  <td>2 452</td>
+                  <td>230</td>
+                  <td>1 114</td>
+                  <td>1 003.64 грн</td>
+                </tr>
+                <tr>
+                  <td>Рацул О В</td>
+                  <td>123 100 грн</td>
+                  <td>1 563</td>
+                  <td>122</td>
+                  <td>701</td>
+                  <td>1 009.01 грн</td>
+                </tr>
+                <tr>
+                  <td>ДудникНиколай Владимирович</td>
+                  <td>120 455 грн</td>
+                  <td>1 577</td>
+                  <td>136</td>
+                  <td>704</td>
+                  <td>885.70 грн</td>
+                </tr>
+                <tr>
+                  <td>Ткаченко А В</td>
+                  <td>98 182 грн</td>
+                  <td>1 048</td>
+                  <td>91</td>
+                  <td>539</td>
+                  <td>1 078.93 грн</td>
+                </tr>
+                <tr>
+                  <td>Мумыга М В</td>
+                  <td>78 909 грн</td>
+                  <td>1 207</td>
+                  <td>111</td>
+                  <td>528</td>
+                  <td>710.89 грн</td>
+                </tr>
+                <tr>
+                  <td>Кубрак Александр</td>
+                  <td>52 768 грн</td>
+                  <td>238</td>
+                  <td>10</td>
+                  <td>97</td>
+                  <td>5 276.80 грн</td>
+                </tr>
+                <tr>
+                  <td>Кириченко А А</td>
+                  <td>42 072 грн</td>
+                  <td>530</td>
+                  <td>52</td>
+                  <td>250</td>
+                  <td>809.08 грн</td>
+                </tr>
+                <tr>
+                  <td>Сивиренчук П,С,</td>
+                  <td>42 037 грн</td>
+                  <td>366</td>
+                  <td>38</td>
+                  <td>207</td>
+                  <td>1 106.22 грн</td>
+                </tr>
+                <tr>
+                  <td>Живицкий Н В</td>
+                  <td>40 498 грн</td>
+                  <td>654</td>
+                  <td>40</td>
+                  <td>324</td>
+                  <td>1 012.46 грн</td>
+                </tr>
+                <tr>
+                  <td>Довченко П,И,</td>
+                  <td>39 831 грн</td>
+                  <td>462</td>
+                  <td>51</td>
+                  <td>122</td>
+                  <td>781.01 грн</td>
+                </tr>
+                <tr>
+                  <td>Арапов О В</td>
+                  <td>29 150 грн</td>
+                  <td>163</td>
+                  <td>94</td>
+                  <td>142</td>
+                  <td>310.10 грн</td>
+                </tr>
+                <tr>
+                  <td>Артем Ахметьянов</td>
+                  <td>28 149 грн</td>
+                  <td>167</td>
+                  <td>5</td>
+                  <td>75</td>
+                  <td>5 629.76 грн</td>
+                </tr>
+                <tr>
+                  <td>Димьянинко С Ф</td>
+                  <td>28 132 грн</td>
+                  <td>317</td>
+                  <td>15</td>
+                  <td>87</td>
+                  <td>1 875.46 грн</td>
+                </tr>
+                <tr>
+                  <td>Зеленый А В</td>
+                  <td>27 057 грн</td>
+                  <td>268</td>
+                  <td>28</td>
+                  <td>158</td>
+                  <td>966.30 грн</td>
+                </tr>
+                <tr>
+                  <td>Загоруйко Олег Георгиевич</td>
+                  <td>24 228 грн</td>
+                  <td>58</td>
+                  <td>9</td>
+                  <td>50</td>
+                  <td>2 692.02 грн</td>
+                </tr>
+                <tr>
+                  <td>Ігор Петрунін</td>
+                  <td>23 202 грн</td>
+                  <td>60</td>
+                  <td>17</td>
+                  <td>38</td>
+                  <td>1 364.81 грн</td>
+                </tr>
+                <tr>
+                  <td>Окопник А И</td>
+                  <td>20 320 грн</td>
+                  <td>211</td>
+                  <td>32</td>
+                  <td>120</td>
+                  <td>635.01 грн</td>
+                </tr>
+                <tr>
+                  <td>Другаля В В</td>
+                  <td>20 074 грн</td>
+                  <td>133</td>
+                  <td>16</td>
+                  <td>91</td>
+                  <td>1 254.64 грн</td>
+                </tr>
+                <tr>
+                  <td>Могилей А В</td>
+                  <td>18 714 грн</td>
+                  <td>320</td>
+                  <td>38</td>
+                  <td>165</td>
+                  <td>492.46 грн</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="img-card">
+            <img
+              src="presentation_assets/db_07_top_buyers.png"
+              alt="Топ клієнтів і каналів"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> ключових клієнтів/канали за внеском у
+                виручку.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> продажі дуже
+                нерівномірні; потрібно вирівнювати структуру клієнтської бази,
+                щоб зменшити ризик просідання.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>4) Хто просів і хто виріс серед клієнтів</h2>
+          <span class="section-sub"
+            >Порівняння виручки клієнтів між 2023 та 2025 роками</span
+          >
+        </div>
+        <div class="split">
+          <div>
+            <h3>Топ-15 найбільших втрат</h3>
+            <div class="table-wrap">
+              <table class="dataframe data-table">
+                <thead>
+                  <tr style="text-align: right">
+                    <th>Клієнт / канал продажу</th>
+                    <th>Виручка 2023</th>
+                    <th>Виручка 2025</th>
+                    <th>Зміна (2025 - 2023)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Клименко А В</td>
+                    <td>93 178 грн</td>
+                    <td>139 грн</td>
+                    <td>-93 039 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Ткаченко А В</td>
+                    <td>50 486 грн</td>
+                    <td>0 грн</td>
+                    <td>-50 486 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Кубрак Александр</td>
+                    <td>47 289 грн</td>
+                    <td>0 грн</td>
+                    <td>-47 289 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Рацул О В</td>
+                    <td>46 700 грн</td>
+                    <td>0 грн</td>
+                    <td>-46 700 грн</td>
+                  </tr>
+                  <tr>
+                    <td>ДудникНиколай Владимирович</td>
+                    <td>42 375 грн</td>
+                    <td>0 грн</td>
+                    <td>-42 375 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Офлайн-продажі в магазині (сукупно, не один клієнт)</td>
+                    <td>829 505 грн</td>
+                    <td>798 778 грн</td>
+                    <td>-30 728 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Мумыга М В</td>
+                    <td>22 697 грн</td>
+                    <td>0 грн</td>
+                    <td>-22 697 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Загоруйко Олег Георгиевич</td>
+                    <td>16 833 грн</td>
+                    <td>0 грн</td>
+                    <td>-16 833 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Вакуленко Ю,А,</td>
+                    <td>15 515 грн</td>
+                    <td>0 грн</td>
+                    <td>-15 515 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Зеленый А В</td>
+                    <td>13 986 грн</td>
+                    <td>0 грн</td>
+                    <td>-13 986 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Димьянинко С Ф</td>
+                    <td>12 890 грн</td>
+                    <td>263 грн</td>
+                    <td>-12 627 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Курбатов Владимир</td>
+                    <td>11 860 грн</td>
+                    <td>0 грн</td>
+                    <td>-11 860 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Кириченко А А</td>
+                    <td>16 794 грн</td>
+                    <td>6 134 грн</td>
+                    <td>-10 660 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Другаля В В</td>
+                    <td>12 815 грн</td>
+                    <td>2 639 грн</td>
+                    <td>-10 176 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Роман Турецький</td>
+                    <td>9 773 грн</td>
+                    <td>0 грн</td>
+                    <td>-9 773 грн</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h3>Топ-15 найбільших приростів</h3>
+            <div class="table-wrap">
+              <table class="dataframe data-table">
+                <thead>
+                  <tr style="text-align: right">
+                    <th>Клієнт / канал продажу</th>
+                    <th>Виручка 2023</th>
+                    <th>Виручка 2025</th>
+                    <th>Зміна (2025 - 2023)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Артем Ахметьянов</td>
+                    <td>0 грн</td>
+                    <td>6 434 грн</td>
+                    <td>6 434 грн</td>
+                  </tr>
+                  <tr>
+                    <td>БЕРЛОВСЬКИЙ ВАЛЕРІЙ</td>
+                    <td>0 грн</td>
+                    <td>6 262 грн</td>
+                    <td>6 262 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Волосян А,И,</td>
+                    <td>0 грн</td>
+                    <td>5 711 грн</td>
+                    <td>5 711 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Тороп С И</td>
+                    <td>0 грн</td>
+                    <td>4 539 грн</td>
+                    <td>4 539 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Бокуляров Денис</td>
+                    <td>0 грн</td>
+                    <td>4 202 грн</td>
+                    <td>4 202 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Чечет Ольга</td>
+                    <td>0 грн</td>
+                    <td>4 097 грн</td>
+                    <td>4 097 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Тимошевский Д В</td>
+                    <td>0 грн</td>
+                    <td>4 015 грн</td>
+                    <td>4 015 грн</td>
+                  </tr>
+                  <tr>
+                    <td>сергей сосновский</td>
+                    <td>0 грн</td>
+                    <td>3 908 грн</td>
+                    <td>3 908 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Розгачев Я А</td>
+                    <td>1 110 грн</td>
+                    <td>5 000 грн</td>
+                    <td>3 890 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Пономаренко Михаил</td>
+                    <td>0 грн</td>
+                    <td>3 572 грн</td>
+                    <td>3 572 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Василюк Ярослав</td>
+                    <td>0 грн</td>
+                    <td>3 485 грн</td>
+                    <td>3 485 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Станислав Семіделихин</td>
+                    <td>0 грн</td>
+                    <td>3 480 грн</td>
+                    <td>3 480 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Лобода Олександр</td>
+                    <td>0 грн</td>
+                    <td>3 254 грн</td>
+                    <td>3 254 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Кубрик Р С</td>
+                    <td>1 958 грн</td>
+                    <td>5 135 грн</td>
+                    <td>3 177 грн</td>
+                  </tr>
+                  <tr>
+                    <td>Демчук Андрій Петрович</td>
+                    <td>0 грн</td>
+                    <td>2 895 грн</td>
+                    <td>2 895 грн</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>5) Які товари формують основну виручку</h2>
+          <span class="section-sub">Топ товарів за внеском у виручку</span>
+        </div>
+        <div class="two-col">
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Товар</th>
+                  <th>Виручка</th>
+                  <th>Продано одиниць</th>
+                  <th>Кількість чеків/документів</th>
+                  <th>Кількість клієнтів</th>
+                  <th>Середня ціна за одиницю</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Яйца 2016</td>
+                  <td>70 635 грн</td>
+                  <td>1 850</td>
+                  <td>383</td>
+                  <td>54</td>
+                  <td>38.18 грн</td>
+                </tr>
+                <tr>
+                  <td>
+                    Кресло CZ Recliner Comfort Armchair 56x46x42 98 с
+                    подлокотниками и рег. ножками
+                  </td>
+                  <td>38 530 грн</td>
+                  <td>12</td>
+                  <td>11</td>
+                  <td>2</td>
+                  <td>3 210.86 грн</td>
+                </tr>
+                <tr>
+                  <td>Ледобур Тонар (Барнаул) ЛР-130Д</td>
+                  <td>24 840 грн</td>
+                  <td>12</td>
+                  <td>12</td>
+                  <td>6</td>
+                  <td>2 070.00 грн</td>
+                </tr>
+                <tr>
+                  <td>Термобелье NORFIN THERMO LINE (чёрн.) 3008103-L</td>
+                  <td>23 346 грн</td>
+                  <td>31</td>
+                  <td>6</td>
+                  <td>3</td>
+                  <td>753.08 грн</td>
+                </tr>
+                <tr>
+                  <td>Шнур GC Inquisitor X4 LG 150м PE1.2</td>
+                  <td>18 987 грн</td>
+                  <td>56</td>
+                  <td>56</td>
+                  <td>22</td>
+                  <td>339.06 грн</td>
+                </tr>
+                <tr>
+                  <td>Мормышка ручн.работа крючок Origin</td>
+                  <td>18 936 грн</td>
+                  <td>729</td>
+                  <td>179</td>
+                  <td>31</td>
+                  <td>25.98 грн</td>
+                </tr>
+                <tr>
+                  <td>Спиннинг Kalipso Navigator Pro 3,00м 80-120гр</td>
+                  <td>18 378 грн</td>
+                  <td>25</td>
+                  <td>19</td>
+                  <td>9</td>
+                  <td>735.12 грн</td>
+                </tr>
+                <tr>
+                  <td>Спиннинг Golden Catch Tele carp 3.5lbs 3.60м</td>
+                  <td>16 314 грн</td>
+                  <td>12</td>
+                  <td>9</td>
+                  <td>5</td>
+                  <td>1 359.51 грн</td>
+                </tr>
+                <tr>
+                  <td>Термобелье NORFIN COSY LINE (чёрное) 3007103-L</td>
+                  <td>16 088 грн</td>
+                  <td>14</td>
+                  <td>3</td>
+                  <td>1</td>
+                  <td>1 149.13 грн</td>
+                </tr>
+                <tr>
+                  <td>Спиннинг GC Traise TRS-762LS 2.29м 2-15гр</td>
+                  <td>15 609 грн</td>
+                  <td>11</td>
+                  <td>11</td>
+                  <td>8</td>
+                  <td>1 418.97 грн</td>
+                </tr>
+                <tr>
+                  <td>Термобелье NORFIN COSY LINE (чёрное) 3007102-M</td>
+                  <td>15 167 грн</td>
+                  <td>13</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1 166.72 грн</td>
+                </tr>
+                <tr>
+                  <td>Катушка Kalipso Monza 4000FE</td>
+                  <td>15 078 грн</td>
+                  <td>18</td>
+                  <td>15</td>
+                  <td>6</td>
+                  <td>837.68 грн</td>
+                </tr>
+                <tr>
+                  <td>Ящик Aquatech Plastic 2870</td>
+                  <td>14 979 грн</td>
+                  <td>11</td>
+                  <td>11</td>
+                  <td>8</td>
+                  <td>1 361.76 грн</td>
+                </tr>
+                <tr>
+                  <td>Спиннинг GC Inquisitor INS-762ML 2.29м 4-18г</td>
+                  <td>14 586 грн</td>
+                  <td>5</td>
+                  <td>5</td>
+                  <td>2</td>
+                  <td>2 917.29 грн</td>
+                </tr>
+                <tr>
+                  <td>
+                    Котушка Fishing ROI Dynamic FR 6+1 6000 бейтр. пласт. шпуля
+                  </td>
+                  <td>14 313 грн</td>
+                  <td>10</td>
+                  <td>8</td>
+                  <td>4</td>
+                  <td>1 431.30 грн</td>
+                </tr>
+                <tr>
+                  <td>Катушка Salmo ELITE FREERUN 7+1 7650BR (8450BR)</td>
+                  <td>14 112 грн</td>
+                  <td>12</td>
+                  <td>6</td>
+                  <td>1</td>
+                  <td>1 176.00 грн</td>
+                </tr>
+                <tr>
+                  <td>Спиннинг Kalipso Titan Carp 3.60м 4.0lb</td>
+                  <td>13 878 грн</td>
+                  <td>13</td>
+                  <td>9</td>
+                  <td>5</td>
+                  <td>1 067.52 грн</td>
+                </tr>
+                <tr>
+                  <td>Котушка "Fishing ROI" BORA plus 4+1 2000 Red</td>
+                  <td>13 318 грн</td>
+                  <td>16</td>
+                  <td>15</td>
+                  <td>11</td>
+                  <td>832.40 грн</td>
+                </tr>
+                <tr>
+                  <td>Котушка "Fishing ROI" BORA plus 4+1 3000 Red</td>
+                  <td>13 100 грн</td>
+                  <td>15</td>
+                  <td>13</td>
+                  <td>4</td>
+                  <td>873.34 грн</td>
+                </tr>
+                <tr>
+                  <td>Ледобур iDabur твин 130 мм</td>
+                  <td>12 861 грн</td>
+                  <td>9</td>
+                  <td>9</td>
+                  <td>6</td>
+                  <td>1 429.04 грн</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="img-card">
+            <img
+              src="presentation_assets/db_08_top_products.png"
+              alt="Топ товарів"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> які товарні позиції дають найбільшу
+                частку виручки.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> частина виручки
+                тримається на обмеженому наборі позицій, тому важливо
+                контролювати їх наявність і ціну.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>6) Рух товарних позицій (артикулів) у 2023 -> 2025</h2>
+          <span class="section-sub"
+            >Скільки позицій вибуло, скільки додалось і що залишилось</span
+          >
+        </div>
+        <div class="two-col">
+          <div class="img-card">
+            <img
+              src="presentation_assets/db_04_sku_state.png"
+              alt="Рух товарних позицій"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> баланс між новими, втраченими та
+                збереженими товарними позиціями.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> втрачено багато позицій з
+                виручкою; нові позиції компенсують лише частину падіння.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Статус товарних позицій</th>
+                  <th>Кількість позицій</th>
+                  <th>Виручка 2023</th>
+                  <th>Виручка 2025</th>
+                  <th>Зміна виручки (2025 - 2023)</th>
+                  <th>Кількість 2023</th>
+                  <th>Кількість 2025</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Вибули з продажу</td>
+                  <td>3 626</td>
+                  <td>1 247 698 грн</td>
+                  <td>0 грн</td>
+                  <td>-1 247 698 грн</td>
+                  <td>11 491</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>Нові позиції</td>
+                  <td>1 968</td>
+                  <td>0 грн</td>
+                  <td>580 333 грн</td>
+                  <td>580 333 грн</td>
+                  <td>0</td>
+                  <td>4 350</td>
+                </tr>
+                <tr>
+                  <td>Залишились в асортименті</td>
+                  <td>1 730</td>
+                  <td>593 800 грн</td>
+                  <td>497 718 грн</td>
+                  <td>-96 082 грн</td>
+                  <td>12 287</td>
+                  <td>7 378</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="split" style="margin-top: 12px">
+          <div>
+            <h3>Топ-20 просідань по товарах</h3>
+            <div class="table-wrap">
+              <table class="dataframe data-table">
+                <thead>
+                  <tr style="text-align: right">
+                    <th>Товар</th>
+                    <th>Статус</th>
+                    <th>Виручка 2023</th>
+                    <th>Виручка 2025</th>
+                    <th>Зміна виручки</th>
+                    <th>Кількість 2023</th>
+                    <th>Кількість 2025</th>
+                    <th>Зміна кількості</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Лодка Барк B-260NPD</td>
+                    <td>Вибули з продажу</td>
+                    <td>10 200 грн</td>
+                    <td>0 грн</td>
+                    <td>-10 200 грн</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>-1</td>
+                  </tr>
+                  <tr>
+                    <td>Зимний костюм Norfin Extreme 3 (-32) размер XL</td>
+                    <td>Вибули з продажу</td>
+                    <td>10 122 грн</td>
+                    <td>0 грн</td>
+                    <td>-10 122 грн</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>-1</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Костюм зимовий мембран. Norfin ARCTIC -25 ° / 4000мм / XL
+                    </td>
+                    <td>Вибули з продажу</td>
+                    <td>10 122 грн</td>
+                    <td>0 грн</td>
+                    <td>-10 122 грн</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>-1</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Спиннинг St.Croix LEGEND ELITE 70 0,9-5,25 гр. LES70ULM2
+                    </td>
+                    <td>Вибули з продажу</td>
+                    <td>9 773 грн</td>
+                    <td>0 грн</td>
+                    <td>-9 773 грн</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>-1</td>
+                  </tr>
+                  <tr>
+                    <td>Костюм зимний NORFIN Atlantis 438003-XL</td>
+                    <td>Вибули з продажу</td>
+                    <td>8 811 грн</td>
+                    <td>0 грн</td>
+                    <td>-8 811 грн</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>-1</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Котушка Fishing ROI Dynamic FR 6+1 6000 бейтр. пласт.
+                      шпуля
+                    </td>
+                    <td>Вибули з продажу</td>
+                    <td>8 533 грн</td>
+                    <td>0 грн</td>
+                    <td>-8 533 грн</td>
+                    <td>6</td>
+                    <td>0</td>
+                    <td>-6</td>
+                  </tr>
+                  <tr>
+                    <td>Подставка Fishing Roi Fast Carp</td>
+                    <td>Вибули з продажу</td>
+                    <td>8 198 грн</td>
+                    <td>0 грн</td>
+                    <td>-8 198 грн</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>-2</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Зимний костюм Norfin Extreme 2 Camo (-32) размер XXL
+                    </td>
+                    <td>Вибули з продажу</td>
+                    <td>8 000 грн</td>
+                    <td>0 грн</td>
+                    <td>-8 000 грн</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>-1</td>
+                  </tr>
+                  <tr>
+                    <td>Шнур GC Inquisitor X4 LG 150м PE1.0</td>
+                    <td>Вибули з продажу</td>
+                    <td>7 265 грн</td>
+                    <td>0 грн</td>
+                    <td>-7 265 грн</td>
+                    <td>22</td>
+                    <td>0</td>
+                    <td>-22</td>
+                  </tr>
+                  <tr>
+                    <td>Заброды (вейдерсы) PROS STANDARD SB01 45</td>
+                    <td>Вибули з продажу</td>
+                    <td>6 300 грн</td>
+                    <td>0 грн</td>
+                    <td>-6 300 грн</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>-3</td>
+                  </tr>
+                  <tr>
+                    <td>Котушка "Fishing ROI" BORA plus 4+1 3000 Red</td>
+                    <td>Залишились в асортименті</td>
+                    <td>7 972 грн</td>
+                    <td>1 792 грн</td>
+                    <td>-6 180 грн</td>
+                    <td>9</td>
+                    <td>2</td>
+                    <td>-7</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Воблер Kosadaka KD7481 INTRA XS 125F (4-HT), Floating,
+                      125mm, 18,1g
+                    </td>
+                    <td>Вибули з продажу</td>
+                    <td>5 960 грн</td>
+                    <td>0 грн</td>
+                    <td>-5 960 грн</td>
+                    <td>21</td>
+                    <td>0</td>
+                    <td>-21</td>
+                  </tr>
+                  <tr>
+                    <td>Спиннинг GC Mirrox MRS-802ML 2,44м 5-21гр</td>
+                    <td>Вибули з продажу</td>
+                    <td>5 825 грн</td>
+                    <td>0 грн</td>
+                    <td>-5 825 грн</td>
+                    <td>4</td>
+                    <td>0</td>
+                    <td>-4</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Котушка Fishing ROI Dynamic FR 6+1 7000 бейтр. пласт.
+                      шпуля
+                    </td>
+                    <td>Вибули з продажу</td>
+                    <td>5 676 грн</td>
+                    <td>0 грн</td>
+                    <td>-5 676 грн</td>
+                    <td>4</td>
+                    <td>0</td>
+                    <td>-4</td>
+                  </tr>
+                  <tr>
+                    <td>Спиннинг Golden Catch Tele carp 3.5lbs 3.60м</td>
+                    <td>Залишились в асортименті</td>
+                    <td>7 006 грн</td>
+                    <td>1 401 грн</td>
+                    <td>-5 605 грн</td>
+                    <td>5</td>
+                    <td>1</td>
+                    <td>-4</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Спиннинг St.Croix AVID Casting Rod 198 см 5,25-14гр.
+                      AVC66MLF
+                    </td>
+                    <td>Вибули з продажу</td>
+                    <td>5 604 грн</td>
+                    <td>0 грн</td>
+                    <td>-5 604 грн</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>-1</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Костюм зимний NORFIN THERMAL GUARD (-20°) 431005-XXL
+                    </td>
+                    <td>Вибули з продажу</td>
+                    <td>5 288 грн</td>
+                    <td>0 грн</td>
+                    <td>-5 288 грн</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>-1</td>
+                  </tr>
+                  <tr>
+                    <td>Фидер Favorite Nitrotech 3.90m 120g</td>
+                    <td>Вибули з продажу</td>
+                    <td>5 264 грн</td>
+                    <td>0 грн</td>
+                    <td>-5 264 грн</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>-2</td>
+                  </tr>
+                  <tr>
+                    <td>Котушка "Fishing ROI" BORA plus 4+1 2000 Red</td>
+                    <td>Вибули з продажу</td>
+                    <td>5 106 грн</td>
+                    <td>0 грн</td>
+                    <td>-5 106 грн</td>
+                    <td>6</td>
+                    <td>0</td>
+                    <td>-6</td>
+                  </tr>
+                  <tr>
+                    <td>Кресло CZ Marshal VIP Chair, 52x59x43/110</td>
+                    <td>Вибули з продажу</td>
+                    <td>4 728 грн</td>
+                    <td>0 грн</td>
+                    <td>-4 728 грн</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>-1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h3>Топ-20 приростів по товарах</h3>
+            <div class="table-wrap">
+              <table class="dataframe data-table">
+                <thead>
+                  <tr style="text-align: right">
+                    <th>Товар</th>
+                    <th>Статус</th>
+                    <th>Виручка 2023</th>
+                    <th>Виручка 2025</th>
+                    <th>Зміна виручки</th>
+                    <th>Кількість 2023</th>
+                    <th>Кількість 2025</th>
+                    <th>Зміна кількості</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Лодка Барк B-250D</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>9 300 грн</td>
+                    <td>9 300 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Катушка Salmo ELITE FREERUN 7+1 7650BR (8450BR)</td>
+                    <td>Залишились в асортименті</td>
+                    <td>1 176 грн</td>
+                    <td>9 408 грн</td>
+                    <td>8 232 грн</td>
+                    <td>1</td>
+                    <td>8</td>
+                    <td>7</td>
+                  </tr>
+                  <tr>
+                    <td>Лодка Барк B-240CD</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>8 100 грн</td>
+                    <td>8 100 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Жилет Golden Catch спиннингиста серый</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>6 198 грн</td>
+                    <td>6 198 грн</td>
+                    <td>0</td>
+                    <td>3</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Спиннинг St.Croix Premier Spinning Rod 213 см 7-17.5 гр
+                      Fast PS70MF3
+                    </td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>5 604 грн</td>
+                    <td>5 604 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Котушка Ryobi Ecusima Pro LT2000 NEW2023</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>4 680 грн</td>
+                    <td>4 680 грн</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <td>Катушка Daiwa EMCAST EVO 5500 Airbail</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>4 613 грн</td>
+                    <td>4 613 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Ящик Aquatech Plastic 2870</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>4 556 грн</td>
+                    <td>4 556 грн</td>
+                    <td>0</td>
+                    <td>3</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Підсак квадрат (сітка корда) (ручка 1,9м; голова 560х750;
+                      комірка 40х40)
+                    </td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>4 297 грн</td>
+                    <td>4 297 грн</td>
+                    <td>0</td>
+                    <td>5</td>
+                    <td>5</td>
+                  </tr>
+                  <tr>
+                    <td>Удилище Salmo TAIFUN FEEDER 360, 3134-365 (120г)</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>4 066 грн</td>
+                    <td>4 066 грн</td>
+                    <td>0</td>
+                    <td>6</td>
+                    <td>6</td>
+                  </tr>
+                  <tr>
+                    <td>Спиннинг Kalipso Titan Carp 3.90м 4.0lb</td>
+                    <td>Залишились в асортименті</td>
+                    <td>1 278 грн</td>
+                    <td>5 256 грн</td>
+                    <td>3 978 грн</td>
+                    <td>1</td>
+                    <td>4</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <td>Спиннинг GC Inquisitor INS-862ML 2.59м 5-21гр</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>3 791 грн</td>
+                    <td>3 791 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Котушка Ryobi Excia Pro 2000</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>3 550 грн</td>
+                    <td>3 550 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Спиннинг Favorite Synapse Twitching SYST602UL 1.82m 2-8g
+                      Moderate
+                    </td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>3 485 грн</td>
+                    <td>3 485 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Удилище Salmo Diamond Carp 390 3pcs</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>3 347 грн</td>
+                    <td>3 347 грн</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <td>Спиннинг Kalipso Navigator Pro 3,60м 120-180гр</td>
+                    <td>Залишились в асортименті</td>
+                    <td>1 125 грн</td>
+                    <td>4 445 грн</td>
+                    <td>3 320 грн</td>
+                    <td>1</td>
+                    <td>4</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Катушка мультипликаторная ABU GARCIA Ambassadeur 5601 BCX
+                      RED (ЛЕВАЯ РУКА)
+                    </td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>3 306 грн</td>
+                    <td>3 306 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Спиннинг GC Inquisitor INS-762L 2.29м 2-12гр</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>3 201 грн</td>
+                    <td>3 201 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Спиннинг GC Tica Graphite NEO GNS-832ML 2.51м</td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>3 111 грн</td>
+                    <td>3 111 грн</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Спиннинг Favorite Expert Ultra EXU602EUL 1.86м 0.5-5гр.
+                      Moderate
+                    </td>
+                    <td>Нові позиції</td>
+                    <td>0 грн</td>
+                    <td>2 938 грн</td>
+                    <td>2 938 грн</td>
+                    <td>0</td>
+                    <td>3</td>
+                    <td>3</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>7) Категорії товарів: де падаємо, де ростемо</h2>
+          <span class="section-sub"
+            >Структура виручки за категоріями та зміна 2023 -> 2025</span
+          >
+        </div>
+        <div class="split">
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Категорія</th>
+                  <th>Виручка</th>
+                  <th>Частка у загальній виручці</th>
+                  <th>Продано одиниць</th>
+                  <th>Кількість чеків/документів</th>
+                  <th>Кількість товарних позицій</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Воблер</td>
+                  <td>1 616 642 грн</td>
+                  <td>22.84%</td>
+                  <td>6 827</td>
+                  <td>2 819</td>
+                  <td>3 266</td>
+                </tr>
+                <tr>
+                  <td>Спиннинг</td>
+                  <td>479 972 грн</td>
+                  <td>6.78%</td>
+                  <td>542</td>
+                  <td>440</td>
+                  <td>155</td>
+                </tr>
+                <tr>
+                  <td>Катушка</td>
+                  <td>381 307 грн</td>
+                  <td>5.39%</td>
+                  <td>788</td>
+                  <td>573</td>
+                  <td>128</td>
+                </tr>
+                <tr>
+                  <td>Блесна</td>
+                  <td>292 454 грн</td>
+                  <td>4.13%</td>
+                  <td>3 515</td>
+                  <td>1 379</td>
+                  <td>862</td>
+                </tr>
+                <tr>
+                  <td>Шнур</td>
+                  <td>239 714 грн</td>
+                  <td>3.39%</td>
+                  <td>2 774</td>
+                  <td>765</td>
+                  <td>147</td>
+                </tr>
+                <tr>
+                  <td>Леска</td>
+                  <td>154 991 грн</td>
+                  <td>2.19%</td>
+                  <td>1 731</td>
+                  <td>1 292</td>
+                  <td>219</td>
+                </tr>
+                <tr>
+                  <td>Крючки</td>
+                  <td>141 670 грн</td>
+                  <td>2.00%</td>
+                  <td>2 840</td>
+                  <td>1 562</td>
+                  <td>315</td>
+                </tr>
+                <tr>
+                  <td>Котушка</td>
+                  <td>133 549 грн</td>
+                  <td>1.89%</td>
+                  <td>153</td>
+                  <td>124</td>
+                  <td>36</td>
+                </tr>
+                <tr>
+                  <td>Поплавок</td>
+                  <td>132 890 грн</td>
+                  <td>1.88%</td>
+                  <td>2 781</td>
+                  <td>1 095</td>
+                  <td>352</td>
+                </tr>
+                <tr>
+                  <td>Силикон</td>
+                  <td>124 919 грн</td>
+                  <td>1.76%</td>
+                  <td>3 549</td>
+                  <td>1 125</td>
+                  <td>855</td>
+                </tr>
+                <tr>
+                  <td>Удилище</td>
+                  <td>119 302 грн</td>
+                  <td>1.69%</td>
+                  <td>151</td>
+                  <td>117</td>
+                  <td>56</td>
+                </tr>
+                <tr>
+                  <td>Термобелье</td>
+                  <td>98 798 грн</td>
+                  <td>1.40%</td>
+                  <td>105</td>
+                  <td>13</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Виброхвост</td>
+                  <td>98 435 грн</td>
+                  <td>1.39%</td>
+                  <td>1 647</td>
+                  <td>776</td>
+                  <td>318</td>
+                </tr>
+                <tr>
+                  <td>Груз</td>
+                  <td>97 960 грн</td>
+                  <td>1.38%</td>
+                  <td>9 492</td>
+                  <td>1 658</td>
+                  <td>380</td>
+                </tr>
+                <tr>
+                  <td>Крючок</td>
+                  <td>95 035 грн</td>
+                  <td>1.34%</td>
+                  <td>10 067</td>
+                  <td>970</td>
+                  <td>189</td>
+                </tr>
+                <tr>
+                  <td>Удочка</td>
+                  <td>94 400 грн</td>
+                  <td>1.33%</td>
+                  <td>287</td>
+                  <td>223</td>
+                  <td>52</td>
+                </tr>
+                <tr>
+                  <td>Сапоги</td>
+                  <td>81 820 грн</td>
+                  <td>1.16%</td>
+                  <td>79</td>
+                  <td>77</td>
+                  <td>31</td>
+                </tr>
+                <tr>
+                  <td>Лодка</td>
+                  <td>81 192 грн</td>
+                  <td>1.15%</td>
+                  <td>10</td>
+                  <td>10</td>
+                  <td>10</td>
+                </tr>
+                <tr>
+                  <td>Яйца</td>
+                  <td>70 675 грн</td>
+                  <td>1.00%</td>
+                  <td>1 854</td>
+                  <td>386</td>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <td>Мягкая</td>
+                  <td>70 412 грн</td>
+                  <td>0.99%</td>
+                  <td>934</td>
+                  <td>519</td>
+                  <td>210</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="img-card">
+            <img
+              src="presentation_assets/db_05_category_drivers.png"
+              alt="Зміна по категоріях"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> які категорії дали найбільше падіння
+                або приріст виручки.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> спад концентрується в
+                обмеженому колі категорій; саме там потрібні першочергові дії.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="split" style="margin-top: 12px">
+          <div>
+            <h3>Найбільші падіння категорій</h3>
+            <div class="table-wrap">
+              <table class="dataframe data-table">
+                <thead>
+                  <tr style="text-align: right">
+                    <th>Категорія</th>
+                    <th>Виручка 2023</th>
+                    <th>Виручка 2025</th>
+                    <th>Зміна виручки</th>
+                    <th>Кількість 2023</th>
+                    <th>Кількість 2025</th>
+                    <th>Зміна кількості</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Воблер</td>
+                    <td>454 856 грн</td>
+                    <td>183 707 грн</td>
+                    <td>-271 149 грн</td>
+                    <td>1 753</td>
+                    <td>647</td>
+                    <td>-1 106</td>
+                  </tr>
+                  <tr>
+                    <td>Катушка</td>
+                    <td>114 140 грн</td>
+                    <td>64 301 грн</td>
+                    <td>-49 839 грн</td>
+                    <td>193</td>
+                    <td>101</td>
+                    <td>-92</td>
+                  </tr>
+                  <tr>
+                    <td>Котушка</td>
+                    <td>53 933 грн</td>
+                    <td>16 141 грн</td>
+                    <td>-37 792 грн</td>
+                    <td>57</td>
+                    <td>12</td>
+                    <td>-45</td>
+                  </tr>
+                  <tr>
+                    <td>Спиннинг</td>
+                    <td>132 873 грн</td>
+                    <td>98 689 грн</td>
+                    <td>-34 184 грн</td>
+                    <td>118</td>
+                    <td>91</td>
+                    <td>-27</td>
+                  </tr>
+                  <tr>
+                    <td>Блесна</td>
+                    <td>70 817 грн</td>
+                    <td>39 470 грн</td>
+                    <td>-31 347 грн</td>
+                    <td>811</td>
+                    <td>379</td>
+                    <td>-432</td>
+                  </tr>
+                  <tr>
+                    <td>Костюм</td>
+                    <td>24 221 грн</td>
+                    <td>0 грн</td>
+                    <td>-24 221 грн</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>-3</td>
+                  </tr>
+                  <tr>
+                    <td>Леска</td>
+                    <td>42 370 грн</td>
+                    <td>19 924 грн</td>
+                    <td>-22 446 грн</td>
+                    <td>381</td>
+                    <td>178</td>
+                    <td>-203</td>
+                  </tr>
+                  <tr>
+                    <td>Шнур</td>
+                    <td>57 847 грн</td>
+                    <td>38 092 грн</td>
+                    <td>-19 755 грн</td>
+                    <td>743</td>
+                    <td>397</td>
+                    <td>-346</td>
+                  </tr>
+                  <tr>
+                    <td>Зимний</td>
+                    <td>18 122 грн</td>
+                    <td>0 грн</td>
+                    <td>-18 122 грн</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>-2</td>
+                  </tr>
+                  <tr>
+                    <td>Поплавок</td>
+                    <td>32 407 грн</td>
+                    <td>15 734 грн</td>
+                    <td>-16 673 грн</td>
+                    <td>559</td>
+                    <td>334</td>
+                    <td>-225</td>
+                  </tr>
+                  <tr>
+                    <td>Удилище</td>
+                    <td>37 761 грн</td>
+                    <td>21 666 грн</td>
+                    <td>-16 094 грн</td>
+                    <td>42</td>
+                    <td>27</td>
+                    <td>-15</td>
+                  </tr>
+                  <tr>
+                    <td>Удочка</td>
+                    <td>27 326 грн</td>
+                    <td>12 097 грн</td>
+                    <td>-15 229 грн</td>
+                    <td>59</td>
+                    <td>34</td>
+                    <td>-25</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h3>Найбільші прирости категорій</h3>
+            <div class="table-wrap">
+              <table class="dataframe data-table">
+                <thead>
+                  <tr style="text-align: right">
+                    <th>Категорія</th>
+                    <th>Виручка 2023</th>
+                    <th>Виручка 2025</th>
+                    <th>Зміна виручки</th>
+                    <th>Кількість 2023</th>
+                    <th>Кількість 2025</th>
+                    <th>Зміна кількості</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Силикон</td>
+                    <td>21 390 грн</td>
+                    <td>34 678 грн</td>
+                    <td>13 288 грн</td>
+                    <td>703</td>
+                    <td>626</td>
+                    <td>-77</td>
+                  </tr>
+                  <tr>
+                    <td>Лодка</td>
+                    <td>10 200 грн</td>
+                    <td>17 400 грн</td>
+                    <td>7 200 грн</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <td>Волосінь</td>
+                    <td>0 грн</td>
+                    <td>6 868 грн</td>
+                    <td>6 868 грн</td>
+                    <td>0</td>
+                    <td>52</td>
+                    <td>52</td>
+                  </tr>
+                  <tr>
+                    <td>Жилет</td>
+                    <td>2 020 грн</td>
+                    <td>8 643 грн</td>
+                    <td>6 623 грн</td>
+                    <td>3</td>
+                    <td>6</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <td>Ups</td>
+                    <td>0 грн</td>
+                    <td>5 730 грн</td>
+                    <td>5 730 грн</td>
+                    <td>0</td>
+                    <td>43</td>
+                    <td>43</td>
+                  </tr>
+                  <tr>
+                    <td>Комбинезон</td>
+                    <td>0 грн</td>
+                    <td>5 688 грн</td>
+                    <td>5 688 грн</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>2</td>
+                  </tr>
+                  <tr>
+                    <td>Преміум</td>
+                    <td>0 грн</td>
+                    <td>4 540 грн</td>
+                    <td>4 540 грн</td>
+                    <td>0</td>
+                    <td>21</td>
+                    <td>21</td>
+                  </tr>
+                  <tr>
+                    <td>Бойли</td>
+                    <td>763 грн</td>
+                    <td>5 102 грн</td>
+                    <td>4 339 грн</td>
+                    <td>7</td>
+                    <td>40</td>
+                    <td>33</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>8) Сезонність і поточний темп 2026 року</h2>
+          <span class="section-sub"
+            >Порівняння помісячного темпу та прогнозу річного результату</span
+          >
+        </div>
+        <div class="two-col">
+          <div class="img-card">
+            <img
+              src="presentation_assets/db_06_monthly_trend.png"
+              alt="Помісячна динаміка"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> як 2026 рік іде по місяцях відносно
+                попередніх років.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> поточний темп 2026 поки
+                не показує відновлення до рівня 2025.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Місяць</th>
+                  <th>Середня виручка за місяць</th>
+                  <th>Середня кількість проданих одиниць</th>
+                  <th>Середня кількість чеків/документів</th>
+                  <th>Індекс сезонності виручки (1.00 = середній рівень)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>130.79 грн</td>
+                  <td>1.97</td>
+                  <td>1 000</td>
+                  <td>1.06</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>124.55 грн</td>
+                  <td>1.85</td>
+                  <td>968</td>
+                  <td>1.01</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>129.17 грн</td>
+                  <td>1.84</td>
+                  <td>1 102</td>
+                  <td>1.04</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>113.54 грн</td>
+                  <td>1.66</td>
+                  <td>1 317</td>
+                  <td>0.92</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>107.59 грн</td>
+                  <td>1.56</td>
+                  <td>1 444</td>
+                  <td>0.87</td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>110.78 грн</td>
+                  <td>1.60</td>
+                  <td>1 490</td>
+                  <td>0.90</td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td>110.09 грн</td>
+                  <td>1.56</td>
+                  <td>1 547</td>
+                  <td>0.89</td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td>113.75 грн</td>
+                  <td>1.55</td>
+                  <td>1 628</td>
+                  <td>0.92</td>
+                </tr>
+                <tr>
+                  <td>9</td>
+                  <td>131.74 грн</td>
+                  <td>1.64</td>
+                  <td>1 761</td>
+                  <td>1.06</td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td>127.93 грн</td>
+                  <td>1.82</td>
+                  <td>1 907</td>
+                  <td>1.03</td>
+                </tr>
+                <tr>
+                  <td>11</td>
+                  <td>137.29 грн</td>
+                  <td>2.09</td>
+                  <td>1 341</td>
+                  <td>1.11</td>
+                </tr>
+                <tr>
+                  <td>12</td>
+                  <td>147.90 грн</td>
+                  <td>1.99</td>
+                  <td>874</td>
+                  <td>1.20</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="split" style="margin-top: 12px">
+          <div class="img-card">
+            <img
+              src="presentation_assets/db_09_runrate.png"
+              alt="Прогноз річного темпу"
+            />
+            <div class="chart-note">
+              <p>
+                <b>Що показує графік:</b> прогноз річного результату 2026 на
+                основі фактичних даних поточного періоду.
+              </p>
+              <p>
+                <b>Короткий висновок для власника:</b> прогноз нижчий за 2025
+                рік, отже без швидких дій ризик завершити рік зі спадом
+                залишається високим.
+              </p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="dataframe data-table">
+              <thead>
+                <tr style="text-align: right">
+                  <th>Початок періоду</th>
+                  <th>Кінець періоду</th>
+                  <th>Кількість днів</th>
+                  <th>Прогноз річної виручки</th>
+                  <th>Прогноз річної кількості</th>
+                  <th>Прогноз річної кількості чеків/документів</th>
+                  <th>Відхилення до 2025 за виручкою</th>
+                  <th>Відхилення до 2025 за кількістю</th>
+                  <th>Відхилення до 2025 за чеками</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2026-01-02</td>
+                  <td>2026-04-13</td>
+                  <td>102</td>
+                  <td>776 397 грн</td>
+                  <td>7 382</td>
+                  <td>1 575</td>
+                  <td>-28.0%</td>
+                  <td>-37.1%</td>
+                  <td>-34.3%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="footer">
+        <b>Підсумок для управлінського рішення:</b> за новими даними БД потрібно
+        одночасно керувати трьома зонами: 1) повернення обсягу продажів, 2)
+        контроль списань і оборотності запасів, 3) дисципліна закупівель по
+        ключових постачальниках. Окремий реєстр операційних витрат у наданому
+        дампі за 2021-2026 не виділяється окремим блоком.
+      </section>
+    </div>
+  </body>
+</html>

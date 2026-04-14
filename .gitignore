@@ -1,0 +1,17 @@
+# Keep repository minimal for presentation publishing.
+# Ignore everything by default, then explicitly allow only presentation deliverables.
+*
+
+# Allow directory traversal for unignore rules
+!*/
+
+# Always keep gitignore itself
+!.gitignore
+
+# Presentation pages
+!owner_presentation_db_2021_2026.html
+!business_presentation_2021_2026.html
+
+# All presentation images/assets referenced by pages
+!presentation_assets/
+!presentation_assets/**

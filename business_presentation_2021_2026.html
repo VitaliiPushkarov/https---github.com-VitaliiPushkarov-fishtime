@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>FishTime DB Deep Presentation</title>
+  <style>
+    :root { --card:#ffffff; --ink:#12233d; --muted:#42526b; --accent:#0a7ea4; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: "Avenir Next", "Segoe UI", sans-serif; color:var(--ink); background:linear-gradient(145deg,#edf3fb 0%,#f8fbff 60%,#eaf2ff 100%); }
+    .deck { width:min(1240px, 95vw); margin:22px auto 40px; }
+    .slide { min-height:88vh; background:var(--card); border-radius:20px; box-shadow:0 18px 44px rgba(20,52,94,.12); padding:34px 40px; margin-bottom:24px; display:grid; grid-template-columns: 1.05fr 1.4fr; gap:26px; align-items:start; }
+    .slide.only-text { grid-template-columns: 1fr; }
+    h1, h2 { margin:0 0 10px; line-height:1.14; }
+    h1 { font-size:42px; }
+    h2 { font-size:33px; }
+    .subtitle { color:var(--accent); font-size:20px; margin:0 0 16px; font-weight:600; }
+    ul { margin:0; padding-left:20px; }
+    li { margin:0 0 10px; font-size:19px; line-height:1.34; color:var(--muted); }
+    .chart { width:100%; border-radius:14px; border:1px solid #dce6f4; background:#fafdff; }
+    .meta { margin-top:16px; font-size:15px; color:#6d7f99; }
+    @media (max-width: 900px) {
+      .slide { grid-template-columns: 1fr; padding:22px 16px; min-height:auto; }
+      h1 { font-size:31px; }
+      h2 { font-size:27px; }
+      .subtitle { font-size:18px; }
+      li { font-size:17px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <section class="slide only-text">
+      <div>
+        <h1>FishTime: Перерахунок З БД 1С</h1>
+        <p class="subtitle">Глибокий аналіз на транзакційних даних (документ 1482)</p>
+        <ul>
+          <li>Період у файлі: 2012-2026, фокус: 2021-2026.</li>
+          <li>Основа: прямий парсинг 1Cv77.dat, не річні зведення.</li>
+          <li>Ціль: фактори спаду, концентрація клієнтів, SKU-динаміка, run-rate 2026.</li>
+        </ul>
+        <p class="meta">Згенеровано: 2026-04-14 19:56</p>
+      </div>
+    </section>
+    <section class="slide">
+      <div>
+        <h2>Динаміка Revenue/Qty/Price</h2>
+        <p class="subtitle">Обсяг падає, ціна зростає</p>
+        <ul>
+          <li>2021 -> 2025 виручка: 1 265 723 -> 1 078 051 грн (-14.8%).</li>
+          <li>Кількість: 24 537 -> 11 728 шт (-52.2%).</li>
+          <li>Сер. ціна: 51.58 -> 91.92 грн (+78.2%).</li>
+        </ul>
+      </div>
+      <div><img class="chart" src="presentation_assets/db_01_revenue_qty_price.png" alt="chart_2"/></div>
+    </section>
+    <section class="slide">
+      <div>
+        <h2>Фактори Спаду 2023 -> 2025</h2>
+        <p class="subtitle">Головний негатив — обсяг (qty)</p>
+        <ul>
+          <li>Delta виручки: -763 447 грн.</li>
+          <li>Ефект ціни: 344 165 грн.</li>
+          <li>Ефект обсягу: -933 202 грн.</li>
+          <li>Ефект міксу: -174 410 грн.</li>
+        </ul>
+      </div>
+      <div><img class="chart" src="presentation_assets/db_03_price_volume.png" alt="chart_3"/></div>
+    </section>
+    <section class="slide">
+      <div>
+        <h2>SKU Transition</h2>
+        <p class="subtitle">Високий churn знижує передбачуваність</p>
+        <ul>
+          <li>Lost SKU: 3 626 шт  внесок -1 247 698 грн.</li>
+          <li>New SKU: 1 968 шт  внесок 580 333 грн.</li>
+          <li>Retained SKU: 1 730 шт  внесок -96 082 грн.</li>
+        </ul>
+      </div>
+      <div><img class="chart" src="presentation_assets/db_04_sku_state.png" alt="chart_4"/></div>
+    </section>
+    <section class="slide">
+      <div>
+        <h2>Категорійні Драйвери</h2>
+        <p class="subtitle">Спад концентрований у вузькому наборі категорій</p>
+        <ul>
+          <li>Топ-5 категорій формують ~55.6% загального падіння.</li>
+          <li>Потрібен recovery-план саме по цих категоріях.</li>
+          <li>Тактика: доступність товару, цінова сітка, промо та конверсія.</li>
+        </ul>
+      </div>
+      <div><img class="chart" src="presentation_assets/db_05_category_drivers.png" alt="chart_5"/></div>
+    </section>
+    <section class="slide">
+      <div>
+        <h2>Клієнтська Концентрація</h2>
+        <p class="subtitle">Ризик залежності від Top-1 зростає</p>
+        <ul>
+          <li>Top-1 у 2025: 74.1%.</li>
+          <li>Top-10 у 2025: 78.6%.</li>
+          <li>Потрібна диверсифікація бази покупців і керування retention.</li>
+        </ul>
+      </div>
+      <div><img class="chart" src="presentation_assets/db_02_buyer_concentration.png" alt="chart_6"/></div>
+    </section>
+    <section class="slide">
+      <div>
+        <h2>Місячний Тренд</h2>
+        <p class="subtitle">2026 YTD не демонструє розвороту тренду</p>
+        <ul>
+          <li>Порівняння місячних траєкторій 2024/2025/2026.</li>
+          <li>Фаза 2026 поки нижча за потрібний темп до 2025.</li>
+          <li>Необхідні швидкі комерційні інтервенції у топ-категоріях.</li>
+        </ul>
+      </div>
+      <div><img class="chart" src="presentation_assets/db_06_monthly_trend.png" alt="chart_7"/></div>
+    </section>
+    <section class="slide">
+      <div>
+        <h2>Кого І Що Продаємо</h2>
+        <p class="subtitle">Ядро клієнтів і товарів потрібно захищати</p>
+        <ul>
+          <li>Топ-покупці та топ-товари формують ядро обороту.</li>
+          <li>Це зона пріоритетного SLA по наявності.</li>
+          <li>Окремо: mid-tail клієнти як резерв росту.</li>
+        </ul>
+      </div>
+      <div><img class="chart" src="presentation_assets/db_07_top_buyers.png" alt="chart_8"/></div>
+    </section>
+    <section class="slide">
+      <div>
+        <h2>Товарне Ядро</h2>
+        <p class="subtitle">Фокус на найсильніші SKU</p>
+        <ul>
+          <li>Топ-SKU несуть непропорційно великий внесок у виручку.</li>
+          <li>Точки росту: крос-продаж і контроль цінових сходинок.</li>
+          <li>Зменшення шуму в хвості асортименту.</li>
+        </ul>
+      </div>
+      <div><img class="chart" src="presentation_assets/db_08_top_products.png" alt="chart_9"/></div>
+    </section>
+    <section class="slide">
+      <div>
+        <h2>Run-Rate 2026 vs 2025</h2>
+        <p class="subtitle">Поточна швидкість нижча за 2025</p>
+        <ul>
+          <li>Виручка: -28.0%.</li>
+          <li>Кількість: -37.1%.</li>
+          <li>Документи: -34.3%.</li>
+        </ul>
+      </div>
+      <div><img class="chart" src="presentation_assets/db_09_runrate.png" alt="chart_10"/></div>
+    </section>
+    <section class="slide only-text">
+      <div>
+        <h2>90-Денний План</h2>
+        <p class="subtitle">Що робити, щоб повернути обсяг і стабільність</p>
+        <ul>
+          <li>1) Recovery по категоріях з найбільшим негативним delta.</li>
+          <li>2) Стабілізація SKU-ядра і контроль churn новинок.</li>
+          <li>3) Зниження концентрації Top-1 через customer mix.</li>
+          <li>4) Довигрузка собівартості для P&L і unit economics.</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
